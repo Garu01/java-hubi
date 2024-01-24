@@ -24,6 +24,7 @@ import piece.Rabbit;
 import piece.magic_door;
 import piece.mouse_door;
 import piece.normal_door;
+import piece.nothubi;
 import piece.rabbit_door;
 import piece.wallcover;
 import piece.mouse;
@@ -59,7 +60,7 @@ public class GamePanel extends JPanel implements Runnable {
 		boolean canMove;
 		boolean validSquare;
 		
-	TitleScreenHandler tsHandler = new TitleScreenHandler();
+
 	
 	
 	public GamePanel() {
@@ -139,18 +140,21 @@ public class GamePanel extends JPanel implements Runnable {
 			// if hitting a wall, remove it from the list
 			if(activeP.wallCover(activeP.col,activeP.row)== true) {
 				simPieces.remove(activeP.hittingP.getIndex());
+			
 			}
-			if (magicKeyCheck(pieces.get(11).col,pieces.get(11).row)==false) {
-				simPieces.remove(11);
-				magicKeyCondition = false;
+				if (magicKeyCheck(pieces.get(11).col,pieces.get(11).row)==false ){
+					simPieces.remove(11);
+					magicKeyCondition = false;
+			
 			}
 		}
 	}
 	
 	// magic key condition
 	public boolean magicKeyCheck(int targetCol, int targetRow) {
- 
+
 		for (Piece piece1 : simPieces) {
+			if(piece1.isWall(targetCol, targetRow)==false) {
 			for(Piece piece2 : simPieces) {
 			if( (piece1.name=="Rabbit" && piece1.col==(targetCol-1) && piece1.row==targetRow) && (piece2.name== "Mouse" && piece2.col==(targetCol+1) && piece2.row==targetRow ) ){
 				return false;
@@ -165,6 +169,7 @@ public class GamePanel extends JPanel implements Runnable {
 				return false;
 			}
 			}
+		}
 		}
 		return true;
 	}
@@ -288,6 +293,12 @@ public class GamePanel extends JPanel implements Runnable {
 				}
 			}
 			
+			// add nothubi
+			for(int i=0;i<5;i+=2) {
+				for(int j=0;j<5;j+=2) {
+					pieces.add(new nothubi(NP,i,j));
+				}
+			}
 			
 			
 			int count1=0;
@@ -316,6 +327,10 @@ public class GamePanel extends JPanel implements Runnable {
 					}
 				}
 			}
+
+			
+
+			
 			
 			
 			//add rabbit
@@ -343,11 +358,6 @@ public class GamePanel extends JPanel implements Runnable {
 			activeP = null;
 		}
 		
-		public class TitleScreenHandler implements ActionListener{
-			public void actionPerformed(ActionEvent event) {
-				
-			}
-		}
 		
 		
 		// create a game loop that keeps calling these 2 methods at a certain interval

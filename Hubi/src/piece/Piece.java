@@ -110,9 +110,18 @@ public class Piece {
 		return false;
 	}
 	
+	public boolean isWall(int targetCol, int targetRow) {
+		for(Piece piece : GamePanel.simPieces) {
+			if(piece.col==targetCol && piece.row==targetRow && piece.name == "wallcover" ) {
+				return true;
+			}
+	}
+		return false;
+	}
+	
 	public boolean wallCover(int targetCol, int targetRow) {
 		// when moving to the left
-		for(int c = preCol+1;c>targetCol;c--) {
+		for(int c = preCol;c>targetCol;c--) {
 			for(Piece piece : GamePanel.simPieces) {
 				if(piece.col==c && piece.row==targetRow && piece.name == "wallcover" ) {
 					hittingP = piece;
@@ -121,7 +130,7 @@ public class Piece {
 			}
 		}
 		// when moving to the right
-		for(int c = preCol-1;c<targetCol;c++) {
+		for(int c = preCol;c<targetCol;c++) {
 			for(Piece piece : GamePanel.simPieces) {
 				if(piece.col==c && piece.row==targetRow && piece.name == "wallcover") {
 					hittingP = piece;
@@ -130,7 +139,7 @@ public class Piece {
 			}
 		}
 		// when moving up
-		for(int r = preRow+1;r>targetRow;r--) {
+		for(int r = preRow;r>targetRow;r--) {
 			for(Piece piece : GamePanel.simPieces) {
 				if(piece.row==r && piece.col==targetCol && piece.name == "wallcover") {
 					hittingP = piece;
@@ -139,7 +148,7 @@ public class Piece {
 			}
 		}
 		// when moving down
-		for(int r = preRow-1;r<targetRow;r++) {
+		for(int r = preRow;r<targetRow;r++) {
 			for(Piece piece : GamePanel.simPieces) {
 				if(piece.row==r && piece.col==targetCol && piece.name == "wallcover") {
 					hittingP = piece;

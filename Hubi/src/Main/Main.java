@@ -9,10 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JButton;
 public class Main {
-	JPanel titleNamePanel, startButtonPanel;
-	JLabel titleNameLabel;
-	Font titleFont = new Font("Times New Toman", Font.PLAIN,28);
-	Container con;
 	
 	public static void main(String[] args) {
 		JFrame window = new JFrame("Hubi"); // window name
