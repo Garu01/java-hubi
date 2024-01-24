@@ -2,10 +2,16 @@ package Main;
 
 import java.awt.AlphaComposite; 
 
+
+
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
@@ -20,6 +26,7 @@ import piece.mouse_door;
 import piece.normal_door;
 import piece.rabbit_door;
 import piece.wallcover;
+import piece.mouse;
 import Main.Board;
 
 
@@ -38,12 +45,22 @@ public class GamePanel extends JPanel implements Runnable {
 	Board board = new Board();
 	Mouse mouse = new Mouse();
 	
-
+	public static final int R = 0;  // rabbit
+	public static final int M = 1;  // mouse
+	public static final int NP = -1; // not a player
+	int currentPlayer = R;
+	
+	public boolean magicKeyCondition = true;
+	
+	
 	Piece activeP;
 	
 	//boolean 
 		boolean canMove;
 		boolean validSquare;
+		
+	TitleScreenHandler tsHandler = new TitleScreenHandler();
+	
 	
 	public GamePanel() {
 		setPreferredSize(new Dimension(WIDTH,HEIGHT));
@@ -64,9 +81,10 @@ public class GamePanel extends JPanel implements Runnable {
 					// If the activeP is null , check if you can pick up a piece
 					for(Piece piece : simPieces) {
 						// If a mouse is on an ally piece, pick it up as acriveP
-						if(     piece.name == "Rabbit" &&
+						if(     piece.player == currentPlayer &&
 								piece.col == mouse.x/Board.SQUARE_SIZE &&
-								piece.row == mouse.y/Board.SQUARE_SIZE)
+								piece.row == mouse.y/Board.SQUARE_SIZE &&
+								(piece.name == "Rabbit" || piece.name == "Mouse"))
 							activeP = piece;
 					}
 					}
@@ -84,6 +102,7 @@ public class GamePanel extends JPanel implements Runnable {
 							// and removed during the simulation
 							copyPieces(simPieces, pieces);
 							activeP.updatePosition();
+							changePlayer();
 						}
 						else {
 							// the move is not valid so reset everything
@@ -121,8 +140,35 @@ public class GamePanel extends JPanel implements Runnable {
 			if(activeP.wallCover(activeP.col,activeP.row)== true) {
 				simPieces.remove(activeP.hittingP.getIndex());
 			}
+			if (magicKeyCheck(pieces.get(11).col,pieces.get(11).row)==false) {
+				simPieces.remove(11);
+				magicKeyCondition = false;
+			}
 		}
 	}
+	
+	// magic key condition
+	public boolean magicKeyCheck(int targetCol, int targetRow) {
+ 
+		for (Piece piece1 : simPieces) {
+			for(Piece piece2 : simPieces) {
+			if( (piece1.name=="Rabbit" && piece1.col==(targetCol-1) && piece1.row==targetRow) && (piece2.name== "Mouse" && piece2.col==(targetCol+1) && piece2.row==targetRow ) ){
+				return false;
+			}
+			else if((piece1.name=="Mouse" && piece1.col==(targetCol-1) && piece1.row==targetRow) && (piece2.name== "Rabbit" && piece2.col==(targetCol+1) && piece2.row==targetRow) ) {
+				return false;
+			}
+			else if((piece1.name=="Mouse" && piece1.row==(targetRow-1) && piece1.col==targetCol) && (piece2.name== "Rabbit" && piece2.row==(targetRow+1) && piece2.col==targetCol ) ) {
+				return false;
+			}
+			else if((piece1.name=="Rabbit" && piece1.row==(targetRow-1) && piece1.col==targetCol) && (piece2.name== "Mouse" && piece2.row==(targetRow+1) && piece2.col==targetCol) ) {
+				return false;
+			}
+			}
+		}
+		return true;
+	}
+	
 	// paintComponent is a method in Jcomponent that JPanel inherits and is
 		// used to draw objects on the panel
 		public void paintComponent(Graphics g) {
@@ -150,8 +196,23 @@ public class GamePanel extends JPanel implements Runnable {
 				}
 				activeP.draw(g2);
 			}
+			
+			// status message
+			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+			g2.setFont(new Font("Book Antiqua",Font.PLAIN,40));
+			g2.setColor(Color.white);
+			
+			if(currentPlayer == R) {
+				g2.drawString("Rabbit turn", 540, 550);
+			}
+			else {
+				g2.drawString("Mouse turn", 540,250);
 			}
 		
+		    if (magicKeyCondition == false) {
+		    	g2.drawString("Magic door is open, find hubi ", 100,600);
+		    }
+}	
 		
 		public void LaunchGame() {
 			gameThread = new Thread(this);
@@ -169,60 +230,60 @@ public class GamePanel extends JPanel implements Runnable {
 			
 			if(random==1) {
 				//add normal door
-				pieces.add(new normal_door(0,1));
-				pieces.add(new normal_door(0,3));
-				pieces.add(new normal_door(1,0));
-				pieces.add(new normal_door(1,4));
-				pieces.add(new normal_door(3,2));
-				pieces.add(new normal_door(4,1));
-				pieces.add(new normal_door(4,3));
+				pieces.add(new normal_door(NP,0,1));
+				pieces.add(new normal_door(NP,0,3));
+				pieces.add(new normal_door(NP,1,0));
+				pieces.add(new normal_door(NP,1,4));
+				pieces.add(new normal_door(NP,3,2));
+				pieces.add(new normal_door(NP,4,1));
+				pieces.add(new normal_door(NP,4,3));
 				
 				// add mouse door
-				pieces.add(new mouse_door(1,2));
-				pieces.add(new mouse_door(3,4));
+				pieces.add(new mouse_door(NP,1,2));
+				pieces.add(new mouse_door(NP,3,4));
 				
 				
 				// add rabbit door
-				pieces.add(new rabbit_door(2,1));
-				pieces.add(new rabbit_door(3,0));
+				pieces.add(new rabbit_door(NP,2,1));
+				pieces.add(new rabbit_door(NP,3,0));
 
 				// add Magic 
-				pieces.add(new magic_door(2,3));
+				pieces.add(new magic_door(NP,2,3));
 			}
 			
 			if(random==0) {
 				//add normal door
-				pieces.add(new normal_door(1,0));
-				pieces.add(new normal_door(3,0));
-				pieces.add(new normal_door(0,1));
-				pieces.add(new normal_door(4,1));
-				pieces.add(new normal_door(2,3));
-				pieces.add(new normal_door(1,4));
-				pieces.add(new normal_door(3,4));
+				pieces.add(new normal_door(NP,1,0));
+				pieces.add(new normal_door(NP,3,0));
+				pieces.add(new normal_door(NP,0,1));
+				pieces.add(new normal_door(NP,4,1));
+				pieces.add(new normal_door(NP,2,3));
+				pieces.add(new normal_door(NP,1,4));
+				pieces.add(new normal_door(NP,3,4));
 				
 				// add mouse door
-				pieces.add(new mouse_door(2,1));
-				pieces.add(new mouse_door(4,3));
+				pieces.add(new mouse_door(NP,2,1));
+				pieces.add(new mouse_door(NP,4,3));
 				
 				
 				// add rabbit door
-				pieces.add(new rabbit_door(1,2));
-				pieces.add(new rabbit_door(0,3));
+				pieces.add(new rabbit_door(NP,1,2));
+				pieces.add(new rabbit_door(NP,0,3));
 
 				// add Magic 
-				pieces.add(new magic_door(3,2));
+				pieces.add(new magic_door(NP,3,2));
 			}
 			
 			// add wall cover
 			for(int i=0;i<5;i++) {
 				if(i%2==0) {
 					for(int j=1;j<5;j+=2) {
-						pieces.add(new wallcover(i,j));
+						pieces.add(new wallcover(NP,i,j));
 					}
 				}
 				else {
 					for(int j=0;j<5;j+=2) {
-						pieces.add(new wallcover(i,j));
+						pieces.add(new wallcover(NP,i,j));
 					}
 				}
 			}
@@ -235,21 +296,21 @@ public class GamePanel extends JPanel implements Runnable {
 				for(int j=0 ;j<5 ;j+=2){
 					if(random<=4 ) {
 						if(count1<5) {
-							pieces.add(new Carrot(i,j));
+							pieces.add(new Carrot(NP,i,j));
 							count1++;
 						}
 						else {
-							pieces.add(new Chesse(i,j));
+							pieces.add(new Chesse(NP,i,j));
 						}
 						
 					}
 					else{
 						if(count2 <5) {
-							pieces.add(new Chesse(i,j));
+							pieces.add(new Chesse(NP,i,j));
 							count2++;
 						}
 						else {
-							pieces.add(new Carrot(i,j));
+							pieces.add(new Carrot(NP,i,j));
 						}
 						
 					}
@@ -258,7 +319,9 @@ public class GamePanel extends JPanel implements Runnable {
 			
 			
 			//add rabbit
-			pieces.add(new Rabbit(0,0));
+			pieces.add(new Rabbit(R,0,0));
+			//add mouse
+			pieces.add(new mouse(M,4,4));
 			
 		}
 		
@@ -268,6 +331,24 @@ public class GamePanel extends JPanel implements Runnable {
 				target.add(source.get(i));
 			}
 		}
+		
+		// change turn
+		private void changePlayer() {
+			if(currentPlayer==R) {
+				currentPlayer = M;
+			}
+			else {
+				currentPlayer = R;
+			}
+			activeP = null;
+		}
+		
+		public class TitleScreenHandler implements ActionListener{
+			public void actionPerformed(ActionEvent event) {
+				
+			}
+		}
+		
 		
 		// create a game loop that keeps calling these 2 methods at a certain interval
 		public void run() {
@@ -282,7 +363,6 @@ public class GamePanel extends JPanel implements Runnable {
 			
 			while (gameThread != null) {
 				currentTime = System.nanoTime();
-				
 				delta += (currentTime - lastTime) / drawInterval;
 				lastTime = currentTime;
 				

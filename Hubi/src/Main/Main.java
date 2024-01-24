@@ -1,14 +1,25 @@
 package Main;
 
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Font;
+
 import javax.swing.JFrame;
-
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JButton;
 public class Main {
-
+	JPanel titleNamePanel, startButtonPanel;
+	JLabel titleNameLabel;
+	Font titleFont = new Font("Times New Toman", Font.PLAIN,28);
+	Container con;
+	
 	public static void main(String[] args) {
 		JFrame window = new JFrame("Hubi"); // window name
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // program will stop when close window
 		window.setResizable(false); // no resize 
 		
+			
 		// add game panel to window 
 		GamePanel gp = new GamePanel();
 		window.add(gp);
@@ -18,6 +29,9 @@ public class Main {
 		window.setVisible(true);
 		
 		gp.LaunchGame();
+
 	}
+	
+	
 
 }
