@@ -4,6 +4,8 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import Main.GamePanel;
+
 public class Rabbit extends Piece {
 
 	public Rabbit(int player ,int col, int row) {

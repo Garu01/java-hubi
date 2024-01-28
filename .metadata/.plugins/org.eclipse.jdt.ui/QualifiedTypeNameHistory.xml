@@ -37,4 +37,6 @@
     <fullyQualifiedTypeName name="java.awt.Container"/>
     <fullyQualifiedTypeName name="java.awt.Graphics"/>
     <fullyQualifiedTypeName name="java.awt.Graphics2D"/>
+    <fullyQualifiedTypeName name="piece.nothubi"/>
+    <fullyQualifiedTypeName name="Main.GamePanel"/>
 </qualifiedTypeNameHistroy>

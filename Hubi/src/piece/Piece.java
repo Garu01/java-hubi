@@ -14,6 +14,7 @@ public class Piece {
 	public int x,y;
 	public int col, row, preCol, preRow;
 	public Piece hittingP;
+	public Piece hittingT;
 	public String name;
 	public int player;
 	
@@ -85,15 +86,37 @@ public class Piece {
 		}
 		return null;
 	}
-//	public boolean isValidSquare(int targetCol, int targetRow,String door) {
-//		hittingP = getHittingP(targetCol,targetRow);
-//		
-//		if (hittingP.name != door) {
-//			return true;
-//		}
-//		
-//		return false;
-//	}
+	
+	// hitting token
+	public Piece getHittingT(int targetCol, int targetRow) {
+		for(Piece piece : GamePanel.simPieces) {
+			if(piece.col == targetCol && piece.row == targetRow && piece != this  ) {
+				return piece;
+			}
+		}
+		return null;
+	}
+	
+	
+	
+	public Piece isMagicDoor() {
+		for(Piece piece : GamePanel.simPieces) {
+			if( piece.name == "Magic_door"  ) {
+				return piece;
+			}
+		}
+		return null;
+	}
+	
+	public boolean isValidSquare(int targetCol, int targetRow) {
+		hittingP = getHittingP(targetCol,targetRow);
+		
+		if (hittingP == null) {
+			return true;
+		}
+		
+		return false;
+	}
 	
 	public int getIndex() {
 		for(int index=0;index<GamePanel.simPieces.size();index++) {
@@ -235,6 +258,24 @@ public class Piece {
 	}
 	return false;
 	}
+	
+	
+	public boolean isToken(int targetCol, int targetRow) {
+		for(Piece piece : GamePanel.simPieces) {
+			if(piece.row == targetRow && piece.col==targetCol && piece.name=="Token") {
+				hittingP = piece;
+				return true;
+			}
+		}
+		return false;
+	}
+	
+
+	
+	
+
+	
+	
 	
 
 

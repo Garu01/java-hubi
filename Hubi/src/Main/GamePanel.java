@@ -21,6 +21,7 @@ import piece.Carrot;
 import piece.Chesse;
 import piece.Piece;
 import piece.Rabbit;
+import piece.hubi;
 import piece.magic_door;
 import piece.mouse_door;
 import piece.normal_door;
@@ -52,13 +53,45 @@ public class GamePanel extends JPanel implements Runnable {
 	int currentPlayer = R;
 	
 	public boolean magicKeyCondition = true;
+	public boolean checkWin = false;
 	
 	
 	Piece activeP;
-	
+	Piece hubi;
 	//boolean 
 		boolean canMove;
 		boolean validSquare;
+		
+		
+	//game state
+	    public int gameState;
+	    public final int titleState = 0;
+	    public final int playState = 1;
+	    public final int pauseState = 2;
+	   // public final int dialogueState = 3;
+	    
+	    
+	 // SCREEN SETTINGS
+	    final int originalTileSize = 16; // 16x16 tile
+	    final int scale = 3;
+
+	    public final int tileSize = originalTileSize * scale; // 48x48 tile
+	    public final int maxScreenCol = 16;
+	    public final int maxScreenRow = 12;
+	    public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
+	    public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+
+	    // WORLD SETTINGS
+	    public final int maxWorldCol = 50;
+	    public final int maxWorldRow = 50;
+
+	    public final int worldWidth = tileSize * maxWorldCol;
+	    public final int worldHeight = tileSize * maxWorldRow;
+	    
+	    
+	    // system
+	    public UI ui = new UI(this);
+	    public KeyHandler keyH = new KeyHandler(this);
 		
 
 	
@@ -66,6 +99,9 @@ public class GamePanel extends JPanel implements Runnable {
 	public GamePanel() {
 		setPreferredSize(new Dimension(WIDTH,HEIGHT));
 		setBackground(Color.blue);
+		this.setDoubleBuffered(true);
+	    this.addKeyListener(keyH);
+	    this.setFocusable(true);
 		
 		addMouseMotionListener(mouse);
 		addMouseListener(mouse);
@@ -74,6 +110,10 @@ public class GamePanel extends JPanel implements Runnable {
 		copyPieces(pieces,simPieces);
 		
 	}
+	public void setupGame() {
+
+        gameState = titleState;
+    }
 	
 	private void update() {
 		// Mouse button pressed
@@ -114,6 +154,9 @@ public class GamePanel extends JPanel implements Runnable {
 						
 					}
 				}
+				 if (gameState == pauseState) {
+			            // nothing
+			        }
 	}
 	public void simulate() {
 		canMove = false;
@@ -131,22 +174,41 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		if(activeP.canMove(activeP.col, activeP.row)) {
 			canMove = true;
-			validSquare=true;
+			
 			
 			// if hitting a piece, remove it from the list
 //			if(activeP.hittingP != null) {
 //				simPieces.remove(activeP.hittingP.getIndex());
 //			}
 			// if hitting a wall, remove it from the list
+			
 			if(activeP.wallCover(activeP.col,activeP.row)== true) {
 				simPieces.remove(activeP.hittingP.getIndex());
 			
 			}
-				if (magicKeyCheck(pieces.get(11).col,pieces.get(11).row)==false ){
-					simPieces.remove(11);
+
+			
+			for (Piece piece : pieces) {
+				if(piece.name == "Magic_door" && magicKeyCheck(piece.col,piece.row)==false)
+				{
+					simPieces.remove(piece.getIndex());
+					//pieces.remove(piece.getIndex());
 					magicKeyCondition = false;
+				}
 			
 			}
+			
+				// problem : xóa index key thì nó sẽ bị tùm lum -> 
+				if(magicKeyCondition==false) {
+					if(activeP.isToken(activeP.col,activeP.row) ==true) {
+						simPieces.remove(activeP.hittingP.getIndex());
+					}
+					if(activeP.isToken(activeP.col, activeP.row)==false && isWin(activeP.col,activeP.row)==true) {
+						checkWin = true;
+					}
+				}
+				
+				validSquare=true;
 		}
 	}
 	
@@ -174,6 +236,23 @@ public class GamePanel extends JPanel implements Runnable {
 		return true;
 	}
 	
+	public boolean isWin(int targetCol, int targetRow) {
+			for(Piece piece1 : simPieces) {
+				for(Piece piece2 : simPieces) {
+					if((piece1.name == "Rabbit" && piece2.name=="Mouse"  )&& 
+							(piece1.row ==targetRow && piece2.row == targetRow )&&
+							(piece2.col == targetCol && piece1.col == targetCol )) {
+					for(Piece piece3 : simPieces) {
+					if(piece3.name == "hubi" && piece3.row == piece1.row && piece3.col == piece1.col) {
+						return true;
+					}
+					}
+				}}
+			}
+			return false;
+		}
+
+	
 	// paintComponent is a method in Jcomponent that JPanel inherits and is
 		// used to draw objects on the panel
 		public void paintComponent(Graphics g) {
@@ -182,41 +261,52 @@ public class GamePanel extends JPanel implements Runnable {
 			// convert Graphics to Graphics2D
 			Graphics2D g2 = (Graphics2D)g;
 			
-			// draw board
-			board.draw(g2);
+	        // TITLE SCREEN
+	        if (gameState == titleState) {
+	            ui.draw(g2);
+	        }	       
+	        	else {
+	        		//draw board
+	        		board.draw(g2);
+	        		
+	        		// draw piece
+	    			for (Piece p : simPieces) {
+	    				p.draw(g2);
+	    			}
+	    			
+	    			if (activeP !=null) {
+	    				if(canMove)
+	    				{
+	    				g2.setColor(Color.green);
+	    				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.7f));
+	    				g2.fillRect(activeP.col*Board.SQUARE_SIZE, activeP.row*Board.SQUARE_SIZE
+	    						, Board.SQUARE_SIZE, Board.SQUARE_SIZE);
+	    				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f));
+	    				}
+	    				activeP.draw(g2);
+	    			}
+	    			
+	    			// status message
+	    			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+	    			g2.setFont(new Font("Book Antiqua",Font.PLAIN,40));
+	    			g2.setColor(Color.white);
+	    			
+	    			if(currentPlayer == R) {
+	    				g2.drawString("Rabbit turn", 540, 550);
+	    			}
+	    			else {
+	    				g2.drawString("Mouse turn", 540,250);
+	    			}
+	    		
+	    		    if (magicKeyCondition == false) {
+	    		    	g2.drawString("Magic door is open, find hubi ", 100,600);
+	    		    }
+	    		    if(checkWin == true) {
+	    		    	g2.drawString("win ", 200,700);
+	    		    }
+	        	}
+	        g2.dispose();
 			
-			// draw piece
-			for (Piece p : simPieces) {
-				p.draw(g2);
-			}
-			
-			if (activeP !=null) {
-				if(canMove)
-				{
-				g2.setColor(Color.green);
-				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.7f));
-				g2.fillRect(activeP.col*Board.SQUARE_SIZE, activeP.row*Board.SQUARE_SIZE
-						, Board.SQUARE_SIZE, Board.SQUARE_SIZE);
-				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,1f));
-				}
-				activeP.draw(g2);
-			}
-			
-			// status message
-			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-			g2.setFont(new Font("Book Antiqua",Font.PLAIN,40));
-			g2.setColor(Color.white);
-			
-			if(currentPlayer == R) {
-				g2.drawString("Rabbit turn", 540, 550);
-			}
-			else {
-				g2.drawString("Mouse turn", 540,250);
-			}
-		
-		    if (magicKeyCondition == false) {
-		    	g2.drawString("Magic door is open, find hubi ", 100,600);
-		    }
 }	
 		
 		public void LaunchGame() {
@@ -294,13 +384,20 @@ public class GamePanel extends JPanel implements Runnable {
 			}
 			
 			// add nothubi
-			for(int i=0;i<5;i+=2) {
-				for(int j=0;j<5;j+=2) {
-					pieces.add(new nothubi(NP,i,j));
-				}
-			}
+//			for(int i=0;i<5;i+=2) {
+//				for(int j=0;j<5;j+=2) {
+//					pieces.add(new nothubi(NP,i,j));
+//				}
+//			}
+			
+			//add hubi
+			int rand2 = rand.nextInt(3) * 2;
+			int rand3 = rand.nextInt(3) * 2;
+			pieces.add(new hubi(NP,rand2,rand3));
 			
 			
+			
+			//add token
 			int count1=0;
 			int count2=0;
 			for(int i=0 ; i<5 ;i+=2) {
@@ -380,6 +477,9 @@ public class GamePanel extends JPanel implements Runnable {
 					update();
 					repaint();
 					delta--;
+					if(checkWin == true) {
+						break;
+					}
 				}
 			}
 		}
