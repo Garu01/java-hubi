@@ -4,6 +4,7 @@ package Main;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
@@ -12,6 +13,8 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+
 import java.awt.FlowLayout;
 public class UI {
 
@@ -27,6 +30,8 @@ public class UI {
     public String currentDialogue = "";
     public int commandNum = 0;
     public int titleScreenState = 0; // 0: the first screen, 1: the second screen
+    
+	BufferedImage image = getImage("/piece/a");
 
 //    double playTime;
 //    DecimalFormat dFormat = new DecimalFormat("#0.00");
@@ -58,64 +63,11 @@ public class UI {
     }
     public void draw(Graphics2D g2) {
 
-//        if (gameFinished == true) {
-//
-//            g2.setFont(arial_40);
-//            g2.setColor(Color.white);
-//
-//            String text;
-//            int textLength;
-//            int x;
-//            int y;
-//
-//            text = "You found the treasure!";
-//            textLength = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-//            x = gp.screenWidth/2 - textLength/2;
-//            y = gp.screenHeight/2 - (gp.tileSize*3);
-//            g2.drawString(text, x, y);
-//
-//            text = "Your Time is :" + dFormat.format(playTime) + "!";
-//            textLength = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-//            x = gp.screenWidth/2 - textLength/2;
-//            y = gp.screenHeight/2 + (gp.tileSize*4);
-//            g2.drawString(text, x, y);
-//
-//            g2.setFont(arial_80B);
-//            g2.setColor(Color.yellow);
-//            text = "Congratulations!";
-//            textLength = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth();
-//            x = gp.screenWidth/2 - textLength/2;
-//            y = gp.screenHeight/2 + (gp.tileSize*2);
-//            g2.drawString(text, x, y);
-//
-//            gp.gameThread = null;
-//
-//        }
-//        else {
-//            g2.setFont(arial_40);
-//            g2.setColor(Color.white);
-//            g2.drawImage(keyImage, gp.tileSize/2, gp.tileSize/2, gp.tileSize, gp.tileSize, null);
-//            g2.drawString("x "+ gp.player.hasKey, 74, 65);
-//
-//            // TIME
-//            playTime += (double)1/60;
-//            g2.drawString("Time:"+ dFormat.format(playTime), gp.tileSize*11, 65);
-//
-//            // MESSAGE
-//            if (messageOn == true) {
-//
-//                g2.setFont(g2.getFont().deriveFont(30F));
-//                g2.drawString(message, gp.tileSize/2, gp.tileSize*5);
-//
-//                messageCounter++;
-//
-//                if (messageCounter > 120) {
-//                    messageCounter = 0;
-//                    messageOn = false;
-//                }
-//            }
-//        }
+
         this.g2 = g2;
+        
+        g2.drawImage(image, 0, 0 ,GamePanel.WIDTH, GamePanel.HEIGHT,null);
+
 
 //        g2.setFont(arial_40);
         g2.setFont(maruMonica);
@@ -137,10 +89,7 @@ public class UI {
         if (gp.gameState == gp.pauseState) {
             drawPauseScreen();
         }
-        // DIALOGUE STATE
-//        if (gp.gameState == gp.dialogueState) {
-//            drawDialogueScreen();
-//        }
+
     }
     public void drawPauseScreen() {
 
@@ -155,14 +104,18 @@ public class UI {
 
     public void drawTitleScreen() {
 
+
         if (titleScreenState == 0) {
 
-            g2.setColor(new Color(0,0,0));
-            g2.fillRect(0, 0, gp.WIDTH, gp.HEIGHT);
+//            g2.setColor(new Color(0,0,0));
+//            g2.fillRect(0, 0, gp.WIDTH, gp.HEIGHT);
+
+        	
+
 
             // TITLE NAME
             g2.setFont(g2.getFont().deriveFont(Font.BOLD,96F));
-            String text = "Scnhappt Hubi";
+            String text = "";
             int x = getXforCenteredText(text);
             int y = gp.tileSize*3;
 
@@ -170,13 +123,10 @@ public class UI {
             g2.setColor(Color.gray);
             g2.drawString(text, x+5, y+5);
             // MAIN COLOR
-            g2.setColor(Color.white);
+            g2.setColor(Color.black);
             g2.drawString(text, x, y);
 
-            // BLUE BOY IMAGE
-//            x = gp.screenWidth/2 - (gp.tileSize*2)/2;
-//            y += gp.tileSize*2;
-//            g2.drawImage(gp.player.down1, x, y, gp.tileSize*2, gp.tileSize*2, null);
+
 
             // MENU
             g2.setFont(g2.getFont().deriveFont(Font.BOLD,48F));
@@ -189,13 +139,7 @@ public class UI {
                 g2.drawString(">", x-gp.tileSize, y);
             }
 
-//            text = "LOAD GAME";
-//            x = getXforCenteredText(text);
-//            y += gp.tileSize;
-//            g2.drawString(text, x, y);
-//            if (commandNum == 1) {
-//                g2.drawString(">", x-gp.tileSize, y);
-//            }
+
 
             text = "QUIT";
             x = getXforCenteredText(text);
@@ -205,69 +149,10 @@ public class UI {
                 g2.drawString(">", x-gp.tileSize, y);
             }
         }
-//        else if (titleScreenState == 1) {
-//
-//            // CLASS SELECTION SCREEN
-//            g2.setColor(Color.white);
-//            g2.setFont(g2.getFont().deriveFont(42F));
-//
-//            String text = "Select your class!";
-//            int x = getXforCenteredText(text);
-//            int y = gp.tileSize*3;
-//            g2.drawString(text, x ,y);
-//
-//            text = "Fighter";
-//            x = getXforCenteredText(text);
-//            y += gp.tileSize*3;
-//            g2.drawString(text, x, y);
-//            if (commandNum == 0) {
-//                g2.drawString(">", x-gp.tileSize, y);
-//            }
-//
-//            text = "Thief";
-//            x = getXforCenteredText(text);
-//            y += gp.tileSize;
-//            g2.drawString(text, x, y);
-//            if (commandNum == 1) {
-//                g2.drawString(">", x-gp.tileSize, y);
-//            }
-//
-//            text = "Sorcerer";
-//            x = getXforCenteredText(text);
-//            y += gp.tileSize;
-//            g2.drawString(text, x, y);
-//            if (commandNum == 2) {
-//                g2.drawString(">", x-gp.tileSize, y);
-//            }
-//
-//            text = "Back";
-//            x = getXforCenteredText(text);
-//            y += gp.tileSize*2;
-//            g2.drawString(text, x, y);
-//            if (commandNum == 3) {
-//                g2.drawString(">", x-gp.tileSize, y);
-//            }
-//        }
+
     }
 
-//    public void drawDialogueScreen() {
-//
-//        // WINDOW
-//        int x = gp.tileSize*2;
-//        int y = gp.tileSize/2;
-//        int width = gp.screenWidth - (gp.tileSize*4);
-//        int height = gp.tileSize*5;
-//        drawSubWindow(x, y, width, height);
-//
-//        g2.setFont(g2.getFont().deriveFont(Font.PLAIN,32F));
-//        x += gp.tileSize;
-//        y += gp.tileSize;
-//
-//        for (String line : currentDialogue.split("\n")) {
-//            g2.drawString(line, x, y);
-//            y += 40;
-//        }
-//    }
+
 
     public void drawSubWindow(int x, int y, int width, int height) {
 
@@ -288,7 +173,81 @@ public class UI {
     }
     
     
+    
 	// get Image method
+//    public static void createGameWindow(String imagePath) {
+//    	 JFrame frame = new JFrame("Game Window");
+//         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//         frame.setLayout(null);
+//         frame.setSize(800, 600);
+//         
+//    	  ImagePanel imagePanel = new ImagePanel(imagePath);
+//          imagePanel.setBounds(0, 0, 800, 450); // Adjust size as needed
+//          frame.add(imagePanel);
+//          frame.setLocationRelativeTo(null); // Center on screen
+//          frame.setVisible(true);
+//          
+//    }
+//    static class ImagePanel extends JPanel {
+//        private Image image;
+//
+//        public ImagePanel(String imagePath) {
+//            try {
+//                image = ImageIO.read(new File(imagePath)); // Load the image
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        @Override
+//        protected void paintComponent(Graphics g) {
+//            super.paintComponent(g);
+//            Graphics2D g2 = (Graphics2D) g;
+//            if (image != null) {
+//                g2.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this); // Draw the image scaled to fit the panel
+//            }
+//        }
+//    }
+
+    
+//	   static class ImagePanel extends JPanel {
+//	        public Image image;
+//
+//	        public ImagePanel(String imagePath) {
+//	            try {
+//	                image = ImageIO.read(new File(imagePath));
+//	                Dimension size = new Dimension(image.getWidth(null), image.getHeight(null));
+//	                setPreferredSize(size);
+//	                setMinimumSize(size);
+//	                setMaximumSize(size);
+//	                setSize(size);
+//	                setLayout(null);
+//	            } catch (IOException e) {
+//	                e.printStackTrace();
+//	            }
+//	        }
+//	        protected void paintComponent(Graphics g) {
+//	            super.paintComponent(g);
+//	            Graphics2D g2 = (Graphics2D) g;
+//	            g2.drawImage(image, 0, 0, this); // Draws the image at the panel's top-left corner
+//	        }
+//	    }
+    
+//    /**
+//     * Loads an image from the specified file path.
+//     * @param filePath The path to the image file.
+//     * @return The loaded image or null if the image could not be loaded.
+//     */
+//    public static Image loadImageFromFile(String filePath) {
+//        try {
+//            return ImageIO.read(new File(filePath));
+//        } catch (IOException e) {
+//            System.err.println("Error loading image from file: " + filePath);
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
+
 	public BufferedImage getImage(String imagePath) {
 		BufferedImage image = null;
 		try {

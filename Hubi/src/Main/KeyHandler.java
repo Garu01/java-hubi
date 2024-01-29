@@ -51,35 +51,6 @@ public class KeyHandler implements KeyListener {
             }
         }
 
-        // PLAY STATE
-        if (gp.gameState == gp.playState) {
-
-            if (code == KeyEvent.VK_W) {
-                upPressed = true;
-            }
-            if (code == KeyEvent.VK_S) {
-                downPressed = true;
-            }
-            if (code == KeyEvent.VK_A) {
-                leftPressed = true;
-            }
-            if (code == KeyEvent.VK_D) {
-                rightPressed = true;
-            }
-            if (code == KeyEvent.VK_P) {
-                gp.gameState = gp.pauseState;
-            }
-            if (code == KeyEvent.VK_ENTER) {
-                enterPressed = true;
-            }
-        }
-        // PAUSE STATE
-        else if (gp.gameState == gp.pauseState) {
-            if (code == KeyEvent.VK_P) {
-                gp.gameState = gp.playState;
-            }
-        }
-
 
     }
 

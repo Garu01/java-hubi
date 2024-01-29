@@ -12,8 +12,11 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import Main.Mouse;
@@ -50,14 +53,16 @@ public class GamePanel extends JPanel implements Runnable {
 	public static final int R = 0;  // rabbit
 	public static final int M = 1;  // mouse
 	public static final int NP = -1; // not a player
-	int currentPlayer = R;
+	int currentPlayer = R; // first play is rabbit
 	
 	public boolean magicKeyCondition = true;
 	public boolean checkWin = false;
+	public boolean found = false;
+	Piece standwithHubi;
 	
 	
 	Piece activeP;
-	Piece hubi;
+	
 	//boolean 
 		boolean canMove;
 		boolean validSquare;
@@ -68,7 +73,6 @@ public class GamePanel extends JPanel implements Runnable {
 	    public final int titleState = 0;
 	    public final int playState = 1;
 	    public final int pauseState = 2;
-	   // public final int dialogueState = 3;
 	    
 	    
 	 // SCREEN SETTINGS
@@ -93,6 +97,9 @@ public class GamePanel extends JPanel implements Runnable {
 	    public UI ui = new UI(this);
 	    public KeyHandler keyH = new KeyHandler(this);
 		
+	    
+	    // screen image 
+	    BufferedImage image = getImage("/piece/b");
 
 	
 	
@@ -154,9 +161,6 @@ public class GamePanel extends JPanel implements Runnable {
 						
 					}
 				}
-				 if (gameState == pauseState) {
-			            // nothing
-			        }
 	}
 	public void simulate() {
 		canMove = false;
@@ -175,19 +179,12 @@ public class GamePanel extends JPanel implements Runnable {
 		if(activeP.canMove(activeP.col, activeP.row)) {
 			canMove = true;
 			
-			
-			// if hitting a piece, remove it from the list
-//			if(activeP.hittingP != null) {
-//				simPieces.remove(activeP.hittingP.getIndex());
-//			}
 			// if hitting a wall, remove it from the list
-			
 			if(activeP.wallCover(activeP.col,activeP.row)== true) {
 				simPieces.remove(activeP.hittingP.getIndex());
-			
 			}
-
 			
+			// remove magic door
 			for (Piece piece : pieces) {
 				if(piece.name == "Magic_door" && magicKeyCheck(piece.col,piece.row)==false)
 				{
@@ -195,10 +192,9 @@ public class GamePanel extends JPanel implements Runnable {
 					//pieces.remove(piece.getIndex());
 					magicKeyCondition = false;
 				}
-			
 			}
 			
-				// problem : xóa index key thì nó sẽ bị tùm lum -> 
+				// delete token
 				if(magicKeyCondition==false) {
 					if(activeP.isToken(activeP.col,activeP.row) ==true) {
 						simPieces.remove(activeP.hittingP.getIndex());
@@ -206,6 +202,7 @@ public class GamePanel extends JPanel implements Runnable {
 					if(activeP.isToken(activeP.col, activeP.row)==false && isWin(activeP.col,activeP.row)==true) {
 						checkWin = true;
 					}
+					found = hubiFound(activeP.col,activeP.row);
 				}
 				
 				validSquare=true;
@@ -236,6 +233,7 @@ public class GamePanel extends JPanel implements Runnable {
 		return true;
 	}
 	
+	// check win condition
 	public boolean isWin(int targetCol, int targetRow) {
 			for(Piece piece1 : simPieces) {
 				for(Piece piece2 : simPieces) {
@@ -251,6 +249,22 @@ public class GamePanel extends JPanel implements Runnable {
 			}
 			return false;
 		}
+	
+	// check find hubi
+	public boolean hubiFound(int targetCol, int targetRow) {
+		for(Piece piece1 : simPieces) {
+			for (Piece piece2 : simPieces) {
+				if( ((piece1.name == "Rabbit" || piece1.name=="Mouse") && piece2.name=="hubi") &&
+						(piece1.row ==targetRow && piece2.row == targetRow )&&
+						(piece2.col == targetCol && piece1.col == targetCol ) ){
+					standwithHubi = piece1;
+					 return true;
+				}
+			}
+		}
+		standwithHubi = null;
+		return false;
+	}
 
 	
 	// paintComponent is a method in Jcomponent that JPanel inherits and is
@@ -264,9 +278,11 @@ public class GamePanel extends JPanel implements Runnable {
 	        // TITLE SCREEN
 	        if (gameState == titleState) {
 	            ui.draw(g2);
+	            
 	        }	       
 	        	else {
 	        		//draw board
+	        		g2.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
 	        		board.draw(g2);
 	        		
 	        		// draw piece
@@ -292,21 +308,23 @@ public class GamePanel extends JPanel implements Runnable {
 	    			g2.setColor(Color.white);
 	    			
 	    			if(currentPlayer == R) {
-	    				g2.drawString("Rabbit turn", 540, 550);
+	    				g2.drawString("Rabbit turn", 540, 100);
 	    			}
 	    			else {
 	    				g2.drawString("Mouse turn", 540,250);
 	    			}
 	    		
 	    		    if (magicKeyCondition == false) {
-	    		    	g2.drawString("Magic door is open, find hubi ", 100,600);
+	    		    	g2.drawString("Magic door is open, find hubi ", 540,400);
 	    		    }
 	    		    if(checkWin == true) {
 	    		    	g2.drawString("win ", 200,700);
 	    		    }
+	    		    if(found==true) {
+	    		    	g2.drawString("Hubi is found", 300, 700);
+	    		    }
 	        	}
-	        g2.dispose();
-			
+	        g2.dispose();		
 }	
 		
 		public void LaunchGame() {
@@ -383,20 +401,12 @@ public class GamePanel extends JPanel implements Runnable {
 				}
 			}
 			
-			// add nothubi
-//			for(int i=0;i<5;i+=2) {
-//				for(int j=0;j<5;j+=2) {
-//					pieces.add(new nothubi(NP,i,j));
-//				}
-//			}
-			
 			//add hubi
 			int rand2 = rand.nextInt(3) * 2;
 			int rand3 = rand.nextInt(3) * 2;
 			pieces.add(new hubi(NP,rand2,rand3));
 			
-			
-			
+				
 			//add token
 			int count1=0;
 			int count2=0;
@@ -425,11 +435,6 @@ public class GamePanel extends JPanel implements Runnable {
 				}
 			}
 
-			
-
-			
-			
-			
 			//add rabbit
 			pieces.add(new Rabbit(R,0,0));
 			//add mouse
@@ -446,15 +451,27 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		// change turn
 		private void changePlayer() {
-			if(currentPlayer==R) {
+			if(currentPlayer==R ) {
 				currentPlayer = M;
 			}
-			else {
+			else if (currentPlayer==M ) {
 				currentPlayer = R;
 			}
+
 			activeP = null;
 		}
 		
+		// image 
+		public BufferedImage getImage(String imagePath) {
+			BufferedImage image = null;
+			try {
+				image = ImageIO.read(getClass().getResourceAsStream(imagePath+".png"));
+			}
+			catch(IOException e){
+				e.printStackTrace();
+			}
+			return image;
+		}
 		
 		
 		// create a game loop that keeps calling these 2 methods at a certain interval
