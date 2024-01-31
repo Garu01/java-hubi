@@ -19,8 +19,9 @@ public class Main {
 		// add game panel to window 
 		GamePanel gp = new GamePanel();
 		window.add(gp);
+
 		window.pack();
-		
+
 		window.setLocationRelativeTo(null); // if null : show in center of screen, if top left : delete this 
 		window.setVisible(true);
 		

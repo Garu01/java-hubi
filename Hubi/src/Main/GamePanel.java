@@ -24,12 +24,16 @@ import piece.Carrot;
 import piece.Chesse;
 import piece.Piece;
 import piece.Rabbit;
+import piece.clock;
+import piece.clockwise;
+import piece.dice;
 import piece.hubi;
 import piece.magic_door;
 import piece.mouse_door;
 import piece.normal_door;
 import piece.nothubi;
 import piece.rabbit_door;
+import piece.wall;
 import piece.wallcover;
 import piece.mouse;
 import Main.Board;
@@ -41,7 +45,7 @@ import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable {
 	// set up screen size
-	public static final int WIDTH = 800;
+	public static final int WIDTH = 700;
 	public static final int HEIGHT = 800;
 	
 	final int FPS = 60;
@@ -105,7 +109,6 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	public GamePanel() {
 		setPreferredSize(new Dimension(WIDTH,HEIGHT));
-		setBackground(Color.blue);
 		this.setDoubleBuffered(true);
 	    this.addKeyListener(keyH);
 	    this.setFocusable(true);
@@ -257,12 +260,10 @@ public class GamePanel extends JPanel implements Runnable {
 				if( ((piece1.name == "Rabbit" || piece1.name=="Mouse") && piece2.name=="hubi") &&
 						(piece1.row ==targetRow && piece2.row == targetRow )&&
 						(piece2.col == targetCol && piece1.col == targetCol ) ){
-					standwithHubi = piece1;
 					 return true;
 				}
 			}
 		}
-		standwithHubi = null;
 		return false;
 	}
 
@@ -283,7 +284,7 @@ public class GamePanel extends JPanel implements Runnable {
 	        	else {
 	        		//draw board
 	        		g2.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
-	        		board.draw(g2);
+	        		//board.draw(g2);
 	        		
 	        		// draw piece
 	    			for (Piece p : simPieces) {
@@ -308,20 +309,25 @@ public class GamePanel extends JPanel implements Runnable {
 	    			g2.setColor(Color.white);
 	    			
 	    			if(currentPlayer == R) {
-	    				g2.drawString("Rabbit turn", 540, 100);
+	    				g2.drawString("Rabbit turn", 0, 100);
 	    			}
 	    			else {
-	    				g2.drawString("Mouse turn", 540,250);
+	    				g2.drawString("Mouse turn", 500,100);
 	    			}
 	    		
 	    		    if (magicKeyCondition == false) {
-	    		    	g2.drawString("Magic door is open, find hubi ", 540,400);
+	    		    	g2.drawString("Magic door is opened, find hubi ", 100,650);
+	    		    }
+
+	    		    if(found==true) {
+	    		    	g2.drawString("Hubi is found", 350, 750);
 	    		    }
 	    		    if(checkWin == true) {
-	    		    	g2.drawString("win ", 200,700);
-	    		    }
-	    		    if(found==true) {
-	    		    	g2.drawString("Hubi is found", 300, 700);
+		    			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		    			g2.setFont(new Font("Book Antiqua",Font.PLAIN,100));
+		    			g2.setColor(Color.red);
+		 
+	    		    	g2.drawString("win ", 350,400);
 	    		    }
 	        	}
 	        g2.dispose();		
@@ -343,75 +349,79 @@ public class GamePanel extends JPanel implements Runnable {
 			
 			if(random==1) {
 				//add normal door
-				pieces.add(new normal_door(NP,0,1));
-				pieces.add(new normal_door(NP,0,3));
-				pieces.add(new normal_door(NP,1,0));
+				pieces.add(new normal_door(NP,1,2));
 				pieces.add(new normal_door(NP,1,4));
-				pieces.add(new normal_door(NP,3,2));
-				pieces.add(new normal_door(NP,4,1));
+				pieces.add(new normal_door(NP,2,1));
+				pieces.add(new normal_door(NP,2,5));
 				pieces.add(new normal_door(NP,4,3));
+				pieces.add(new normal_door(NP,5,2));
+				pieces.add(new normal_door(NP,5,4));
 				
 				// add mouse door
-				pieces.add(new mouse_door(NP,1,2));
-				pieces.add(new mouse_door(NP,3,4));
+				pieces.add(new mouse_door(NP,2,3));
+				pieces.add(new mouse_door(NP,4,5));
 				
 				
 				// add rabbit door
-				pieces.add(new rabbit_door(NP,2,1));
-				pieces.add(new rabbit_door(NP,3,0));
+				pieces.add(new rabbit_door(NP,3,2));
+				pieces.add(new rabbit_door(NP,4,1));
 
 				// add Magic 
-				pieces.add(new magic_door(NP,2,3));
+				pieces.add(new magic_door(NP,3,4));
 			}
 			
 			if(random==0) {
 				//add normal door
-				pieces.add(new normal_door(NP,1,0));
-				pieces.add(new normal_door(NP,3,0));
-				pieces.add(new normal_door(NP,0,1));
+				pieces.add(new normal_door(NP,2,1));
 				pieces.add(new normal_door(NP,4,1));
-				pieces.add(new normal_door(NP,2,3));
-				pieces.add(new normal_door(NP,1,4));
+				pieces.add(new normal_door(NP,1,2));
+				pieces.add(new normal_door(NP,5,2));
 				pieces.add(new normal_door(NP,3,4));
+				pieces.add(new normal_door(NP,2,5));
+				pieces.add(new normal_door(NP,4,5));
 				
 				// add mouse door
-				pieces.add(new mouse_door(NP,2,1));
-				pieces.add(new mouse_door(NP,4,3));
+				pieces.add(new mouse_door(NP,3,2));
+				pieces.add(new mouse_door(NP,5,4));
 				
 				
 				// add rabbit door
-				pieces.add(new rabbit_door(NP,1,2));
-				pieces.add(new rabbit_door(NP,0,3));
+				pieces.add(new rabbit_door(NP,2,3));
+				pieces.add(new rabbit_door(NP,1,4));
 
 				// add Magic 
-				pieces.add(new magic_door(NP,3,2));
+				pieces.add(new magic_door(NP,4,3));
 			}
 			
 			// add wall cover
-			for(int i=0;i<5;i++) {
-				if(i%2==0) {
-					for(int j=1;j<5;j+=2) {
+			for(int i=1;i<=5;i++) {
+				if(i%2!=0) {
+					for(int j=2;j<=5;j+=2) {
 						pieces.add(new wallcover(NP,i,j));
 					}
 				}
 				else {
-					for(int j=0;j<5;j+=2) {
+					for(int j=1;j<=5;j+=2) {
 						pieces.add(new wallcover(NP,i,j));
 					}
 				}
 			}
+			pieces.add(new wall(NP,2,2));
+			pieces.add(new wall(NP,2,4));
+			pieces.add(new wall(NP,4,4));
+			pieces.add(new wall(NP,4,2));
 			
 			//add hubi
-			int rand2 = rand.nextInt(3) * 2;
-			int rand3 = rand.nextInt(3) * 2;
+			int rand2 = rand.nextInt(3) * 2 +1; // random 1 3 5
+			int rand3 = rand.nextInt(3) * 2 +1;
 			pieces.add(new hubi(NP,rand2,rand3));
 			
 				
 			//add token
 			int count1=0;
 			int count2=0;
-			for(int i=0 ; i<5 ;i+=2) {
-				for(int j=0 ;j<5 ;j+=2){
+			for(int i=1 ; i<=5 ;i+=2) {
+				for(int j=1 ;j<=5 ;j+=2){
 					if(random<=4 ) {
 						if(count1<5) {
 							pieces.add(new Carrot(NP,i,j));
@@ -434,11 +444,17 @@ public class GamePanel extends JPanel implements Runnable {
 					}
 				}
 			}
+			
+			pieces.add(new clock(NP,2,0));
+			pieces.add(new clockwise(NP,2,0));
+			pieces.add(new dice(NP,4,0));
+			pieces.add(new clockwise(NP,4,0));
 
 			//add rabbit
-			pieces.add(new Rabbit(R,0,0));
+			pieces.add(new Rabbit(R,1,1));
 			//add mouse
-			pieces.add(new mouse(M,4,4));
+			pieces.add(new mouse(M,5,5));
+
 			
 		}
 		

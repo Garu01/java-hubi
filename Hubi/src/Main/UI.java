@@ -31,7 +31,7 @@ public class UI {
     public int commandNum = 0;
     public int titleScreenState = 0; // 0: the first screen, 1: the second screen
     
-	BufferedImage image = getImage("/piece/a");
+	BufferedImage image = getImage("/piece/b");
 
 //    double playTime;
 //    DecimalFormat dFormat = new DecimalFormat("#0.00");
@@ -107,17 +107,12 @@ public class UI {
 
         if (titleScreenState == 0) {
 
-//            g2.setColor(new Color(0,0,0));
-//            g2.fillRect(0, 0, gp.WIDTH, gp.HEIGHT);
-
-        	
-
 
             // TITLE NAME
             g2.setFont(g2.getFont().deriveFont(Font.BOLD,96F));
             String text = "";
             int x = getXforCenteredText(text);
-            int y = gp.tileSize*3;
+            int y = gp.tileSize*9;
 
             // SHADOW
             g2.setColor(Color.gray);
@@ -139,8 +134,6 @@ public class UI {
                 g2.drawString(">", x-gp.tileSize, y);
             }
 
-
-
             text = "QUIT";
             x = getXforCenteredText(text);
             y += gp.tileSize;
@@ -151,8 +144,6 @@ public class UI {
         }
 
     }
-
-
 
     public void drawSubWindow(int x, int y, int width, int height) {
 
@@ -173,81 +164,7 @@ public class UI {
     }
     
     
-    
-	// get Image method
-//    public static void createGameWindow(String imagePath) {
-//    	 JFrame frame = new JFrame("Game Window");
-//         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//         frame.setLayout(null);
-//         frame.setSize(800, 600);
-//         
-//    	  ImagePanel imagePanel = new ImagePanel(imagePath);
-//          imagePanel.setBounds(0, 0, 800, 450); // Adjust size as needed
-//          frame.add(imagePanel);
-//          frame.setLocationRelativeTo(null); // Center on screen
-//          frame.setVisible(true);
-//          
-//    }
-//    static class ImagePanel extends JPanel {
-//        private Image image;
-//
-//        public ImagePanel(String imagePath) {
-//            try {
-//                image = ImageIO.read(new File(imagePath)); // Load the image
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        @Override
-//        protected void paintComponent(Graphics g) {
-//            super.paintComponent(g);
-//            Graphics2D g2 = (Graphics2D) g;
-//            if (image != null) {
-//                g2.drawImage(image, 0, 0, this.getWidth(), this.getHeight(), this); // Draw the image scaled to fit the panel
-//            }
-//        }
-//    }
-
-    
-//	   static class ImagePanel extends JPanel {
-//	        public Image image;
-//
-//	        public ImagePanel(String imagePath) {
-//	            try {
-//	                image = ImageIO.read(new File(imagePath));
-//	                Dimension size = new Dimension(image.getWidth(null), image.getHeight(null));
-//	                setPreferredSize(size);
-//	                setMinimumSize(size);
-//	                setMaximumSize(size);
-//	                setSize(size);
-//	                setLayout(null);
-//	            } catch (IOException e) {
-//	                e.printStackTrace();
-//	            }
-//	        }
-//	        protected void paintComponent(Graphics g) {
-//	            super.paintComponent(g);
-//	            Graphics2D g2 = (Graphics2D) g;
-//	            g2.drawImage(image, 0, 0, this); // Draws the image at the panel's top-left corner
-//	        }
-//	    }
-    
-//    /**
-//     * Loads an image from the specified file path.
-//     * @param filePath The path to the image file.
-//     * @return The loaded image or null if the image could not be loaded.
-//     */
-//    public static Image loadImageFromFile(String filePath) {
-//        try {
-//            return ImageIO.read(new File(filePath));
-//        } catch (IOException e) {
-//            System.err.println("Error loading image from file: " + filePath);
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
+    // buffer image
 	public BufferedImage getImage(String imagePath) {
 		BufferedImage image = null;
 		try {
