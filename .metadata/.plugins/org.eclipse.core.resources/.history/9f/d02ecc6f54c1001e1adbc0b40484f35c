@@ -465,13 +465,11 @@ public class GamePanel extends JPanel implements Runnable {
 				}
 			}
 			
-			int rand4 = (rand.nextInt(2) * 4) +1;
-			int rand5 = (rand.nextInt(2) * 4) +1;
+			int rand4 = rand.nextInt(2) * 5;
+			int rand5 = rand.nextInt(2) * 5;
 			//add rabbit
 			pieces.add(new Rabbit(R,rand4,rand5));
 			//add mouse
-			rand4 = (rand.nextInt(2) * 4) +1;
-			rand5 = (rand.nextInt(2) * 4) +1;
 			pieces.add(new mouse(M,rand5,rand4));
 
 			

@@ -300,8 +300,8 @@ public class GamePanel extends JPanel implements Runnable {
 	        		
 	        		// draw piece
 	        		// Create a temporary list for safe iteration
-	                List<Piece> tempSimPieces = new ArrayList<>(simPieces);
-	                for (Piece p : tempSimPieces) {
+	                //List<Piece> tempSimPieces = new ArrayList<>(simPieces);
+	                for (Piece p : pieces) {
 	                    p.draw(g2);
 	                }
 	    			
@@ -464,15 +464,11 @@ public class GamePanel extends JPanel implements Runnable {
 					}
 				}
 			}
-			
-			int rand4 = (rand.nextInt(2) * 4) +1;
-			int rand5 = (rand.nextInt(2) * 4) +1;
+
 			//add rabbit
-			pieces.add(new Rabbit(R,rand4,rand5));
+			pieces.add(new Rabbit(R,1,1));
 			//add mouse
-			rand4 = (rand.nextInt(2) * 4) +1;
-			rand5 = (rand.nextInt(2) * 4) +1;
-			pieces.add(new mouse(M,rand5,rand4));
+			pieces.add(new mouse(M,5,5));
 
 			
 		}

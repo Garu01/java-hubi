@@ -320,7 +320,7 @@ public class GamePanel extends JPanel implements Runnable {
 	    	        
 	    			// status message
 	    			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-	    			g2.setFont(new Font("Book Antiqua",Font.PLAIN,35));
+	    			g2.setFont(new Font("Book Antiqua",Font.PLAIN,40));
 	    			g2.setColor(Color.white);
 	    			
 	    			if(currentPlayer == R) {
@@ -464,15 +464,11 @@ public class GamePanel extends JPanel implements Runnable {
 					}
 				}
 			}
-			
-			int rand4 = (rand.nextInt(2) * 4) +1;
-			int rand5 = (rand.nextInt(2) * 4) +1;
+
 			//add rabbit
-			pieces.add(new Rabbit(R,rand4,rand5));
+			pieces.add(new Rabbit(R,1,1));
 			//add mouse
-			rand4 = (rand.nextInt(2) * 4) +1;
-			rand5 = (rand.nextInt(2) * 4) +1;
-			pieces.add(new mouse(M,rand5,rand4));
+			pieces.add(new mouse(M,5,5));
 
 			
 		}

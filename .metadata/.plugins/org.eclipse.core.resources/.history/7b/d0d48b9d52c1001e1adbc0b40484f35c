@@ -106,7 +106,7 @@ public class UI {
         g2.drawString(message, xMessage, 200);
         //TIME PLAYED
         g2.setFont(new Font("Arial", Font.PLAIN, 24));
-        g2.setColor(Color.white);
+        g2.setColor(Color.YELLOW);
         String timePlayedStr = "Time Played: " + dFormat.format(playTime) + " seconds";
         int timeWidth = g2.getFontMetrics().stringWidth(timePlayedStr);
         int xTimePlayed = (GamePanel.WIDTH - timeWidth) / 2;
