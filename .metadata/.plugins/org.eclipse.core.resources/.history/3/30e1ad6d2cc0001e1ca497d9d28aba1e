@@ -1,0 +1,51 @@
+package Main;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
+
+public class Clock extends JPanel implements ActionListener {
+    private static final int DELAY = 1000; // Update every second
+    private ImageIcon clockFaceIcon;
+    private ImageIcon clockwiseIcon;
+    private double angle = 0; // Start angle
+
+    public Clock() {
+        clockFaceIcon = new ImageIcon("path/to/clock.png");
+        clockwiseIcon = new ImageIcon("path/to/clockwise.png");
+        Timer timer = new Timer(DELAY, this);
+        timer.start();
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2d = (Graphics2D) g.create();
+
+        // Draw the clock face
+        g2d.drawImage(clockFaceIcon.getImage(), 0, 0, this);
+
+        // Calculate the rotation required
+        AffineTransform at = AffineTransform.getRotateInstance(Math.toRadians(angle),
+                clockwiseIcon.getIconWidth() / 2.0,
+                clockwiseIcon.getIconHeight() / 2.0);
+        at.translate(getWidth() / 2.0 - clockwiseIcon.getIconWidth() / 2.0,
+                getHeight() / 2.0 - clockwiseIcon.getIconHeight() / 2.0);
+
+        // Draw the clockwise icon rotated
+        g2d.drawImage(clockwiseIcon.getImage(), at, this);
+
+        g2d.dispose();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        angle += 6; // Increment angle by 6 degrees (360 degrees / 60 minutes)
+        if (angle >= 360) {
+            angle = 0; // Reset after full rotation
+        }
+        repaint();
+    }
+}

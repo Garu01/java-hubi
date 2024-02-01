@@ -1,9 +1,13 @@
 package Main;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import java.awt.AlphaComposite; 
 
-
-
+import java.text.DecimalFormat;
+import java.util.Random;
+import java.util.Collections;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,10 +16,11 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.function.Consumer;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
@@ -24,9 +29,6 @@ import piece.Carrot;
 import piece.Chesse;
 import piece.Piece;
 import piece.Rabbit;
-import piece.clock;
-import piece.clockwise;
-import piece.dice;
 import piece.hubi;
 import piece.magic_door;
 import piece.mouse_door;
@@ -39,9 +41,7 @@ import piece.mouse;
 import Main.Board;
 
 
-import java.util.Random;
-import java.util.Collections;
-import java.util.ArrayList;
+
 
 public class GamePanel extends JPanel implements Runnable {
 	// set up screen size
@@ -53,6 +53,7 @@ public class GamePanel extends JPanel implements Runnable {
 
 	Board board = new Board();
 	Mouse mouse = new Mouse();
+
 	
 	public static final int R = 0;  // rabbit
 	public static final int M = 1;  // mouse
@@ -66,7 +67,9 @@ public class GamePanel extends JPanel implements Runnable {
 	
 	
 	Piece activeP;
-	
+	//TIME
+	double playTime = 0; 
+    DecimalFormat dFormat = new DecimalFormat("#0.00");
 	//boolean 
 		boolean canMove;
 		boolean validSquare;
@@ -77,7 +80,8 @@ public class GamePanel extends JPanel implements Runnable {
 	    public final int titleState = 0;
 	    public final int playState = 1;
 	    public final int pauseState = 2;
-	    
+	    public final int endState = 3;
+	    public final int helpState = 4;
 	    
 	 // SCREEN SETTINGS
 	    final int originalTileSize = 16; // 16x16 tile
@@ -112,14 +116,16 @@ public class GamePanel extends JPanel implements Runnable {
 		this.setDoubleBuffered(true);
 	    this.addKeyListener(keyH);
 	    this.setFocusable(true);
-		
+	    
+	    
 		addMouseMotionListener(mouse);
 		addMouseListener(mouse);
-		
+
 		setPieces();
 		copyPieces(pieces,simPieces);
 		
 	}
+
 	public void setupGame() {
 
         gameState = titleState;
@@ -267,6 +273,8 @@ public class GamePanel extends JPanel implements Runnable {
 		return false;
 	}
 
+
+
 	
 	// paintComponent is a method in Jcomponent that JPanel inherits and is
 		// used to draw objects on the panel
@@ -280,16 +288,22 @@ public class GamePanel extends JPanel implements Runnable {
 	        if (gameState == titleState) {
 	            ui.draw(g2);
 	            
-	        }	       
+	        }
+	        else if(gameState == endState) {
+	        	double finalPlayTime = playTime;
+		    	ui.drawEndScreen(g2,finalPlayTime);
+		    }
 	        	else {
 	        		//draw board
 	        		g2.drawImage(image, 0, 0, WIDTH, HEIGHT, null);
 	        		//board.draw(g2);
 	        		
 	        		// draw piece
-	    			for (Piece p : simPieces) {
-	    				p.draw(g2);
-	    			}
+	        		// Create a temporary list for safe iteration
+	                List<Piece> tempSimPieces = new ArrayList<>(simPieces);
+	                for (Piece p : tempSimPieces) {
+	                    p.draw(g2);
+	                }
 	    			
 	    			if (activeP !=null) {
 	    				if(canMove)
@@ -302,7 +316,8 @@ public class GamePanel extends JPanel implements Runnable {
 	    				}
 	    				activeP.draw(g2);
 	    			}
-	    			
+	    	        
+	    	        
 	    			// status message
 	    			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 	    			g2.setFont(new Font("Book Antiqua",Font.PLAIN,40));
@@ -323,11 +338,16 @@ public class GamePanel extends JPanel implements Runnable {
 	    		    	g2.drawString("Hubi is found", 350, 750);
 	    		    }
 	    		    if(checkWin == true) {
-		    			g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		    			g2.setFont(new Font("Book Antiqua",Font.PLAIN,100));
-		    			g2.setColor(Color.red);
-		 
-	    		    	g2.drawString("win ", 350,400);
+
+	    		    	gameState = endState;
+	    		        repaint(); 
+	    		       
+	    		    }
+	    		    //TIME
+	    		    if(gameState == playState) {
+	    		    	g2.setFont(new Font("Poppins", Font.BOLD, 40)); 
+		    		    g2.setColor(Color.BLACK); 
+		    		    g2.drawString("Time: " + dFormat.format(playTime), 250, 70);
 	    		    }
 	        	}
 	        g2.dispose();		
@@ -444,11 +464,6 @@ public class GamePanel extends JPanel implements Runnable {
 					}
 				}
 			}
-			
-			pieces.add(new clock(NP,2,0));
-			pieces.add(new clockwise(NP,2,0));
-			pieces.add(new dice(NP,4,0));
-			pieces.add(new clockwise(NP,4,0));
 
 			//add rabbit
 			pieces.add(new Rabbit(R,1,1));
@@ -492,10 +507,7 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		// create a game loop that keeps calling these 2 methods at a certain interval
 		public void run() {
-			// game loop : The game loop is a sequence of processes that run continuously 
-			// as long as the game is running 
-			// Here we use System.nanoTime() to measure the elapsed time and call update and 
-			// repaint methods once every 1/60 of a second.
+
 			double drawInterval = 1000000000 / FPS;
 			double delta = 0;
 			long lastTime = System.nanoTime();
@@ -506,13 +518,16 @@ public class GamePanel extends JPanel implements Runnable {
 				delta += (currentTime - lastTime) / drawInterval;
 				lastTime = currentTime;
 				
-				if (delta >1) {
+				while (delta >1) {
 					update();
-					repaint();
 					delta--;
+					if(gameState == playState) {
+						playTime += 1.0 / FPS;
+					}
+					}
+					repaint();
 					if(checkWin == true) {
 						break;
-					}
 				}
 			}
 		}

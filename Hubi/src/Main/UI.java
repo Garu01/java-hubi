@@ -1,6 +1,6 @@
 package Main;
 
-
+import java.text.DecimalFormat;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -20,7 +20,7 @@ public class UI {
 
     GamePanel gp;
     Graphics2D g2;
-//    Font arial_40, arial_80B;
+
     Font maruMonica, purisaB;
 //    BufferedImage keyImage;
     public boolean messageOn = false;
@@ -30,19 +30,14 @@ public class UI {
     public String currentDialogue = "";
     public int commandNum = 0;
     public int titleScreenState = 0; // 0: the first screen, 1: the second screen
-    
+    double playTime = 0.0;
+    DecimalFormat dFormat = new DecimalFormat("#0.00");
 	BufferedImage image = getImage("/piece/b");
 
-//    double playTime;
-//    DecimalFormat dFormat = new DecimalFormat("#0.00");
+	
 
     public UI(GamePanel gp) {
         this.gp = gp;
-
-//        arial_40 = new Font("Cambria", Font.PLAIN, 40);
-//        arial_80B = new Font("Arial", Font.BOLD, 80);
-//        OBJ_Key key = new OBJ_Key(gp);
-//        keyImage = key.image;
 
         try {
             InputStream is = getClass().getResourceAsStream("/font/x12y16pxMaruMonica.ttf");
@@ -55,6 +50,7 @@ public class UI {
             e.printStackTrace();
         }
     }
+   
 
     public void showMessage(String text) {
 
@@ -62,7 +58,7 @@ public class UI {
         messageOn = true;
     }
     public void draw(Graphics2D g2) {
-
+    	
 
         this.g2 = g2;
         
@@ -74,7 +70,6 @@ public class UI {
 //        g2.setFont(purisaB);
         g2.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         g2.setColor(Color.white);
-
         // TITLE STATE
         if (gp.gameState == gp.titleState) {
             drawTitleScreen();
@@ -89,8 +84,38 @@ public class UI {
         if (gp.gameState == gp.pauseState) {
             drawPauseScreen();
         }
+        
+        //END GAME STATE
+        if (gp.gameState == gp.endState) {
+            drawEndScreen(g2,playTime);
+        }
+    }
+    
+    public void drawEndScreen(Graphics2D g2, double playTime) {
+    	g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
+        
+        g2.setColor(Color.YELLOW);
+        g2.setFont(new Font("Arial", Font.BOLD, 48));
+        //draw text at center
+        String message = "Congratulations!";
+        int messageWidth = g2.getFontMetrics().stringWidth(message);
+        int xMessage = (GamePanel.WIDTH - messageWidth) / 2;
+        
+        g2.drawString(message, xMessage, 200);
+        //TIME PLAYED
+        g2.setFont(new Font("Arial", Font.PLAIN, 24));
+        g2.setColor(Color.YELLOW);
+        String timePlayedStr = "Time Played: " + dFormat.format(playTime) + " seconds";
+        int timeWidth = g2.getFontMetrics().stringWidth(timePlayedStr);
+        int xTimePlayed = (GamePanel.WIDTH - timeWidth) / 2;
+        
+        g2.drawString(timePlayedStr, xTimePlayed, 250);
+
 
     }
+    
+    
     public void drawPauseScreen() {
 
         g2.setFont(g2.getFont().deriveFont(Font.PLAIN,80F));
@@ -125,8 +150,8 @@ public class UI {
 
             // MENU
             g2.setFont(g2.getFont().deriveFont(Font.BOLD,48F));
-
-            text = "Start GAME";
+            g2.setColor(Color.BLACK);
+            text = "START GAME";
             x = getXforCenteredText(text);
             y += gp.tileSize*3.5;
             g2.drawString(text, x, y);
@@ -141,9 +166,11 @@ public class UI {
             if (commandNum == 1) {
                 g2.drawString(">", x-gp.tileSize, y);
             }
+            
         }
 
     }
+    
 
     public void drawSubWindow(int x, int y, int width, int height) {
 
