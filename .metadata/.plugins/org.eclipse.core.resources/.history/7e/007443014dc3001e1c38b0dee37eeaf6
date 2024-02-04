@@ -1,7 +1,6 @@
 package Main;
 
 import java.awt.Color;
-
 import java.awt.Container;
 import java.awt.Font;
 import java.io.BufferedInputStream;
@@ -11,11 +10,13 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import javazoom.jl.player.Player;
 
 import javax.swing.JButton;
 public class Main {
 
 	public static void main(String[] args) {
+		//String musicFilePath = "/Hubi/res/sound/music.mp3";
 		
 		JFrame window = new JFrame("Hubi"); // window name
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // program will stop when close window
@@ -35,4 +36,6 @@ public class Main {
 		gp.LaunchGame();
 
 	}
+
+
 }
