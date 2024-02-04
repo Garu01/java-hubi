@@ -383,78 +383,81 @@ public class GamePanel extends JPanel implements Runnable {
 		
 		public void setPieces() {
 			Random rand = new Random();
-			int random = rand.nextInt(4);
+			int random = rand.nextInt(3);
 			
-			if(random==1) {
-				//add normal door
-				pieces.add(new normal_door(NP,1,2));
-				pieces.add(new normal_door(NP,1,4));
-				pieces.add(new normal_door(NP,2,1));
-				pieces.add(new normal_door(NP,2,5));
-				pieces.add(new normal_door(NP,4,3));
-				pieces.add(new normal_door(NP,5,2));
-				pieces.add(new normal_door(NP,5,4));
-				
-				// add mouse door
-				pieces.add(new mouse_door(NP,2,3));
-				pieces.add(new mouse_door(NP,4,5));
-				
-				
-				// add rabbit door
-				pieces.add(new rabbit_door(NP,3,2));
-				pieces.add(new rabbit_door(NP,4,1));
+			
 
-				// add Magic 
-				pieces.add(new magic_door(NP,3,4));
-			}
 			
-			if(random==0) {
-				//add normal door
-				pieces.add(new normal_door(NP,2,1));
-				pieces.add(new normal_door(NP,4,1));
-				pieces.add(new normal_door(NP,1,2));
-				pieces.add(new normal_door(NP,5,2));
-				pieces.add(new normal_door(NP,3,4));
-				pieces.add(new normal_door(NP,2,5));
-				pieces.add(new normal_door(NP,4,5));
-				
-				// add mouse door
-				pieces.add(new mouse_door(NP,3,2));
-				pieces.add(new mouse_door(NP,5,4));
-				
-				
-				// add rabbit door
-				pieces.add(new rabbit_door(NP,2,3));
-				pieces.add(new rabbit_door(NP,1,4));
-
-				// add Magic 
-				pieces.add(new magic_door(NP,4,3));
-			}
 			
-			if(random==2) {
-				//add normal door
-				pieces.add(new normal_door(NP,6-1,6-2));
-				pieces.add(new normal_door(NP,6-1,6-4));
-				pieces.add(new normal_door(NP,6-2,6-1));
-				pieces.add(new normal_door(NP,6-2,6-5));
-				pieces.add(new normal_door(NP,6-4,6-3));
-				pieces.add(new normal_door(NP,6-5,6-2));
-				pieces.add(new normal_door(NP,6-5,6-4));
-				
-				// add mouse door
-				pieces.add(new mouse_door(NP,6-2,6-3));
-				pieces.add(new mouse_door(NP,6-4,6-5));
-				
-				
-				// add rabbit door
-				pieces.add(new rabbit_door(NP,6-3,6-2));
-				pieces.add(new rabbit_door(NP,6-4,6-1));
-
-				// add Magic 
-				pieces.add(new magic_door(NP,6-3,6-4));
-			}
+//			if(random==1) {
+//				//add normal door
+//				pieces.add(new normal_door(NP,1,2));
+//				pieces.add(new normal_door(NP,1,4));
+//				pieces.add(new normal_door(NP,2,1));
+//				pieces.add(new normal_door(NP,2,5));
+//				pieces.add(new normal_door(NP,4,3));
+//				pieces.add(new normal_door(NP,5,2));
+//				pieces.add(new normal_door(NP,5,4));
+//				
+//				// add mouse door
+//				pieces.add(new mouse_door(NP,2,3));
+//				pieces.add(new mouse_door(NP,4,5));
+//				
+//				
+//				// add rabbit door
+//				pieces.add(new rabbit_door(NP,3,2));
+//				pieces.add(new rabbit_door(NP,4,1));
+//
+//				// add Magic 
+//				pieces.add(new magic_door(NP,3,4));
+//			}
+//			
+//			if(random==0) {
+//				//add normal door
+//				pieces.add(new normal_door(NP,2,1));
+//				pieces.add(new normal_door(NP,4,1));
+//				pieces.add(new normal_door(NP,1,2));
+//				pieces.add(new normal_door(NP,5,2));
+//				pieces.add(new normal_door(NP,3,4));
+//				pieces.add(new normal_door(NP,2,5));
+//				pieces.add(new normal_door(NP,4,5));
+//				
+//				// add mouse door
+//				pieces.add(new mouse_door(NP,3,2));
+//				pieces.add(new mouse_door(NP,5,4));
+//				
+//				
+//				// add rabbit door
+//				pieces.add(new rabbit_door(NP,2,3));
+//				pieces.add(new rabbit_door(NP,1,4));
+//
+//				// add Magic 
+//				pieces.add(new magic_door(NP,4,3));
+//			}
+//			
+//			if(random==2) {
+//				//add normal door
+//				pieces.add(new normal_door(NP,6-1,6-2));
+//				pieces.add(new normal_door(NP,6-1,6-4));
+//				pieces.add(new normal_door(NP,6-2,6-1));
+//				pieces.add(new normal_door(NP,6-2,6-5));
+//				pieces.add(new normal_door(NP,6-4,6-3));
+//				pieces.add(new normal_door(NP,6-5,6-2));
+//				pieces.add(new normal_door(NP,6-5,6-4));
+//				
+//				// add mouse door
+//				pieces.add(new mouse_door(NP,6-2,6-3));
+//				pieces.add(new mouse_door(NP,6-4,6-5));
+//				
+//				
+//				// add rabbit door
+//				pieces.add(new rabbit_door(NP,6-3,6-2));
+//				pieces.add(new rabbit_door(NP,6-4,6-1));
+//
+//				// add Magic 
+//				pieces.add(new magic_door(NP,6-3,6-4));
+//			}
 			
-			if(random==3) {
 			//add normal door
 			pieces.add(new normal_door(NP,6-2,6-1));
 			pieces.add(new normal_door(NP,6-4,6-1));
@@ -475,7 +478,6 @@ public class GamePanel extends JPanel implements Runnable {
 
 			// add Magic 
 			pieces.add(new magic_door(NP,6-4,6-3));
-			}
 
 			
 			// add wall cover
