@@ -40,10 +40,13 @@
     <fullyQualifiedTypeName name="piece.hubi"/>
     <fullyQualifiedTypeName name="javax.imageio.ImageIO"/>
     <fullyQualifiedTypeName name="javax.swing.JPanel"/>
-    <fullyQualifiedTypeName name="java.io.File"/>
     <fullyQualifiedTypeName name="piece.clock"/>
     <fullyQualifiedTypeName name="piece.clockwise"/>
     <fullyQualifiedTypeName name="piece.dice"/>
     <fullyQualifiedTypeName name="java.awt.geom.AffineTransform"/>
     <fullyQualifiedTypeName name="piece.wall"/>
+    <fullyQualifiedTypeName name="java.io.FileInputStream"/>
+    <fullyQualifiedTypeName name="java.io.BufferedInputStream"/>
+    <fullyQualifiedTypeName name="java.io.InputStream"/>
+    <fullyQualifiedTypeName name="java.io.File"/>
 </qualifiedTypeNameHistroy>

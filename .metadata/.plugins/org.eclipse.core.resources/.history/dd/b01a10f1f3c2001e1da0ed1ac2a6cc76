@@ -1,0 +1,47 @@
+package Main;
+import javazoom.jl.player.Player;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+public class Sound {
+    private String filePath;
+
+    public Sound(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void play() {
+//        File mp3File = new File(filePath);
+//        // Check if the file exists and is readable
+//        if (!mp3File.exists() || !mp3File.canRead()) {
+//            System.out.println("File does not exist or cannot be read: " + filePath);
+//            return;
+//        }
+//
+//        try (FileInputStream fis = new FileInputStream(mp3File);
+//             BufferedInputStream bis = new BufferedInputStream(fis)) {
+//            Player player = new Player(bis);
+//            System.out.println("Playing: " + filePath);
+//            player.play();
+//        } catch (Exception e) {
+//            System.out.println("An error occurred while trying to play the file: " + filePath);
+//            e.printStackTrace();
+//        }
+        
+        
+        new Thread(() -> {
+            try (FileInputStream fis = new FileInputStream(filePath);
+                 BufferedInputStream bis = new BufferedInputStream(fis)) {
+                Player player = new Player(bis);
+                player.play();
+            } catch (Exception e) {
+                System.out.println("Problem playing file " + filePath);
+                e.printStackTrace();
+            }
+        }).start();
+    }
+    }
+    
+    

@@ -1,0 +1,43 @@
+package Main;
+
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.File;
+import java.io.IOException;
+
+public class Sound {
+
+    public static void playMusic(String filePath) {
+        try {
+            // Open an audio input stream.
+            File audioFile = new File(filePath);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(audioFile);
+            
+            // Get a sound clip resource.
+            Clip clip = AudioSystem.getClip();
+            
+            // Open audio clip and load samples from the audio input stream.
+            clip.open(audioStream);
+            
+            // Start playing the audio clip
+            clip.start();
+            
+            // Optional: To play the music in a loop, you can use
+            // clip.loop(Clip.LOOP_CONTINUOUSLY);
+            
+        } catch (UnsupportedAudioFileException e) {
+            e.printStackTrace();
+            System.out.println("The specified audio file is not supported.");
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error occurred while playing the audio file.");
+        } catch (LineUnavailableException e) {
+            e.printStackTrace();
+            System.out.println("Audio line for playing back is unavailable.");
+        }
+    }
+}

@@ -1,0 +1,25 @@
+package Main;
+import javazoom.jl.player.Player;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+public class Sound {
+    private String filePath;
+
+    public Sound(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void play() {
+        // Use try-with-resources to ensure proper closure of resources
+        try (InputStream in = getClass().getResourceAsStream("/sound/Lofi Hip Hop, Dreamy, Cinematic.mp3");
+                BufferedInputStream bis = new BufferedInputStream(in)) {
+            Player player = new Player(bis);
+            player.play();
+        } catch (Exception e) {
+            System.out.println("Problem playing file " + filePath);
+            e.printStackTrace();
+        }
+    }
+}

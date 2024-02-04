@@ -1,0 +1,24 @@
+import javazoom.jl.player.Player;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+
+public class Sound {
+    private String filePath;
+
+    public Sound(String filePath) {
+        this.filePath = filePath;
+    }
+
+    public void play() {
+        try {
+            FileInputStream fis = new FileInputStream(filePath);
+            BufferedInputStream bis = new BufferedInputStream(fis);
+            Player player = new Player(bis);
+            player.play();
+            fis.close();
+        } catch (Exception e) {
+            System.out.println("Problem playing file " + filePath);
+            e.printStackTrace();
+        }
+    }
+}

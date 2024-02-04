@@ -34,7 +34,7 @@ public class UI {
     DecimalFormat dFormat = new DecimalFormat("#0.00");
 	BufferedImage image = getImage("/piece/b");
 	
-	BufferedImage end_image = getImage("/piece/a");
+	BufferedImage end_image = getImage("/piece/end_game");
 
 	
 

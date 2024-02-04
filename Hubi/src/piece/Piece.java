@@ -71,7 +71,7 @@ public class Piece {
 		return false;
 	}
 	public boolean isWithinBoard(int targetCol, int targetRow) {
-		if(targetCol >=1 && targetCol <= 5 && targetRow >=0 && targetRow<=5) {
+		if(targetCol >=1 && targetCol <= 5 && targetRow >=1 && targetRow<=5) {
 			return true;
 		}
 		else {
@@ -221,45 +221,6 @@ public class Piece {
 		}
 		return false;
 	}
-	
-	// check type wall
-	public boolean typeWall(int targetCol,int targetRow, String door) {
-	
-	// go left
-	for(Piece piece : GamePanel.simPieces) {
-	if(piece.row == (targetRow) && piece.col == (targetCol+1) && piece.name == door ) {
-		//hittingP = piece;
-		return true;
-	}
-	}
-	
-	// go right
-	for (Piece piece : GamePanel.simPieces) {
-		if(piece.row == (targetRow) && piece.col == (targetCol-1) && piece.name== door )
-		{
-			//hittingP = piece;
-			return true;
-		}
-	}
-	
-	// go up 
-	for (Piece piece : GamePanel.simPieces) {
-		if(piece.row == (targetRow+1) && piece.col == (targetCol) && piece.name == door) {
-			//hittingP = piece;
-			return true;
-		}
-	}
-	
-	// go down
-	for(Piece piece : GamePanel.simPieces) {
-		if(piece.row == (targetRow-1) && piece.col == (targetCol) && piece.name == door) {
-			//hittingP = piece;
-			return true;
-		}
-	}
-	return false;
-	}
-	
 	
 	//  check token
 	public boolean isToken(int targetCol, int targetRow) {

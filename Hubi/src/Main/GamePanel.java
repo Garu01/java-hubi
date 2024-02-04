@@ -1,6 +1,7 @@
 package Main;
 
 import java.util.List;
+
 import java.util.ArrayList;
 
 import java.awt.AlphaComposite; 
@@ -18,11 +19,22 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JPanel;
+import javazoom.jl.player.Player;
+
+
 
 import Main.Mouse;
 import piece.Carrot;
@@ -39,6 +51,7 @@ import piece.wall;
 import piece.wallcover;
 import piece.mouse;
 import Main.Board;
+
 
 
 
@@ -107,8 +120,10 @@ public class GamePanel extends JPanel implements Runnable {
 		
 	    
 	    // screen image 
-	    BufferedImage image = getImage("/piece/b");
-
+	    BufferedImage image = getImage("/piece/game");
+	    
+	    //sound
+	    Sound sound = new Sound();
 	
 	
 	public GamePanel() {
@@ -129,6 +144,7 @@ public class GamePanel extends JPanel implements Runnable {
 	public void setupGame() {
 
         gameState = titleState;
+        playMusic(0);
     }
 	
 	private void update() {
@@ -508,6 +524,9 @@ public class GamePanel extends JPanel implements Runnable {
 			return image;
 		}
 		
+
+
+		
 		
 		// create a game loop that keeps calling these 2 methods at a certain interval
 		public void run() {
@@ -516,8 +535,10 @@ public class GamePanel extends JPanel implements Runnable {
 			double delta = 0;
 			long lastTime = System.nanoTime();
 			long currentTime;
+
 			
 			while (gameThread != null) {
+
 				currentTime = System.nanoTime();
 				delta += (currentTime - lastTime) / drawInterval;
 				lastTime = currentTime;
@@ -535,4 +556,11 @@ public class GamePanel extends JPanel implements Runnable {
 				}
 			}
 		}
+		
+		public void playMusic(int i) {
+			sound.setFile(i);
+			sound.play();
+			sound.loop();
+		}
+
 }
