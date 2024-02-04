@@ -45,8 +45,13 @@
     <fullyQualifiedTypeName name="piece.dice"/>
     <fullyQualifiedTypeName name="java.awt.geom.AffineTransform"/>
     <fullyQualifiedTypeName name="piece.wall"/>
-    <fullyQualifiedTypeName name="java.io.FileInputStream"/>
-    <fullyQualifiedTypeName name="java.io.BufferedInputStream"/>
     <fullyQualifiedTypeName name="java.io.InputStream"/>
     <fullyQualifiedTypeName name="java.io.File"/>
+    <fullyQualifiedTypeName name="java.io.FileInputStream"/>
+    <fullyQualifiedTypeName name="java.io.BufferedInputStream"/>
+    <fullyQualifiedTypeName name="javazoom.jl.player.Player"/>
+    <fullyQualifiedTypeName name="java.net.URL"/>
+    <fullyQualifiedTypeName name="javax.sound.sampled.Clip"/>
+    <fullyQualifiedTypeName name="javax.sound.sampled.AudioInputStream"/>
+    <fullyQualifiedTypeName name="javax.sound.sampled.AudioSystem"/>
 </qualifiedTypeNameHistroy>

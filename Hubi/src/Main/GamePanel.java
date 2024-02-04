@@ -227,7 +227,10 @@ public class GamePanel extends JPanel implements Runnable {
 					if(activeP.isToken(activeP.col, activeP.row)==false && isWin(activeP.col,activeP.row)==true) {
 						checkWin = true;
 					}
-					found = hubiFound(activeP.col,activeP.row);
+					if(hubiFound(activeP.col,activeP.row)==true) {
+						found = true;
+					}
+					 
 				}
 				
 				validSquare=true;
