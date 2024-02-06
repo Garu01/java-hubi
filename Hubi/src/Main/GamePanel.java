@@ -138,13 +138,13 @@ public class GamePanel extends JPanel implements Runnable {
 
 		setPieces();
 		copyPieces(pieces,simPieces);
-		
+		playMusic(playState);
 	}
 
 	public void setupGame() {
 
         gameState = titleState;
-        playMusic(1);
+       // playMusic(gameState);
     }
 	
 	private void update() {
@@ -306,7 +306,6 @@ public class GamePanel extends JPanel implements Runnable {
 	        // TITLE SCREEN
 	        if (gameState == titleState) {
 	            ui.draw(g2);
-	            
 	        }
 	        else if(gameState == endState) {
 	        	double finalPlayTime = playTime;
@@ -592,6 +591,7 @@ public class GamePanel extends JPanel implements Runnable {
 				delta += (currentTime - lastTime) / drawInterval;
 				lastTime = currentTime;
 				
+				
 				while (delta >1) {
 					update();
 					delta--;
@@ -601,6 +601,7 @@ public class GamePanel extends JPanel implements Runnable {
 					}
 					repaint();
 					if(checkWin == true) {
+						sound.stop();
 						break;
 				}
 			}
@@ -610,6 +611,10 @@ public class GamePanel extends JPanel implements Runnable {
 			sound.setFile(i);
 			sound.play();
 			sound.loop();
+
+		}
+		public void stopMusic() {
+			sound.stop();
 		}
 
 }

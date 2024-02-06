@@ -1,6 +1,7 @@
 package Main;
 
 import java.io.BufferedInputStream;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -18,6 +19,7 @@ public class Sound {
 	public Sound() {
 		soundURL[0] = getClass().getResource("/sound/music.wav");
 		soundURL[1] = getClass().getResource("/sound/sound2.wav");
+		soundURL[2] = getClass().getResource("/sound/Piano Pack - Track 06");
 	}
 	
 	public void setFile(int i) {
